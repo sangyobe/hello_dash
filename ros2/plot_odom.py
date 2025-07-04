@@ -11,10 +11,15 @@ df = pd.read_csv(csv_filename)
 time = df['time'].to_list()
 x = df['x'].to_list()
 y = df['y'].to_list()
-theta = df['theta'].to_list()
+theta = [(np.pi*0.5-x) for x in df['theta'].to_list()]
+theta_degree = np.degrees(theta)
+vx = df['vx'].to_list()
+vy = df['vy'].to_list()
+wz = df['wz'].to_list()
 vx_des = df['vx_des'].to_list()
 vy_des = df['vy_des'].to_list()
 wz_des = df['wz_des'].to_list()
+
 
 # Plot
 fig = make_subplots(rows=4, cols=1,
@@ -26,40 +31,71 @@ fig = make_subplots(rows=4, cols=1,
 fig.add_trace(go.Scatter(x=x, y=y,
                          mode='lines+markers',
                          name='(x, y) Trajectory',
-                         marker=dict(size=5),
+                         marker=dict(
+                             symbol='triangle-up', # 방향을 나타내기 좋은 위쪽 삼각형 마커 사용
+                             size=10, # 마커 크기
+                             color='blue', # 마커 색상
+                             angle=theta_degree, # theta 값에 따라 마커 회전 (도 단위)
+                             line=dict(width=1, color='DarkSlateGrey') # 마커 테두리
+                         ),
+                         line=dict(color='lightgrey', width=1), # 궤적 선 색상 및 두께
                          hovertemplate=
-                         '<b>Time</b>: %{customdata[0]:.2f}s<br>' +
-                         '<b>X</b>: %{x:.2f}<br>' +
-                         '<b>Y</b>: %{y:.2f}<br>' +
-                         '<b>Theta</b>: %{customdata[1]:.2f} radians<extra></extra>',
-                         customdata=np.stack((time, theta), axis=-1)),
+                         '<b>Time</b>: %{customdata[0]:.5f}s<br>' +
+                         '<b>X</b>: %{x:.5f}<br>' +
+                         '<b>Y</b>: %{y:.5f}<br>' +
+                         '<b>Theta</b>: %{customdata[1]:.5f} degrees<extra></extra>',
+                         customdata=np.stack((time, theta_degree), axis=-1)),
               row=1, col=1)
 
+fig.add_trace(go.Scatter(x=time, y=vx,
+                         mode='lines',
+                         name='vx',
+                         line=dict(color='green'),
+                         hovertemplate=
+                         '<b>Time</b>: %{x:.5f}s<br>' +
+                         '<b>Vx</b>: %{y:.5f} m/sec<extra></extra>'),
+              row=2, col=1)
 fig.add_trace(go.Scatter(x=time, y=vx_des,
                          mode='lines',
                          name='vx_des',
                          line=dict(color='red'),
                          hovertemplate=
-                         '<b>Time</b>: %{x:.2f}s<br>' +
-                         '<b>Vw</b>: %{y:.2f} m/sec<extra></extra>'),
+                         '<b>Time</b>: %{x:.5f}s<br>' +
+                         '<b>vx_des</b>: %{y:.5f} m/sec<extra></extra>'),
               row=2, col=1)
 
+fig.add_trace(go.Scatter(x=time, y=vy,
+                         mode='lines',
+                         name='vy',
+                         line=dict(color='green'),
+                         hovertemplate=
+                         '<b>Time</b>: %{x:.5f}s<br>' +
+                         '<b>vy</b>: %{y:.5f} m/sec<extra></extra>'),
+              row=3, col=1)
 fig.add_trace(go.Scatter(x=time, y=vy_des,
                          mode='lines',
                          name='vy_des',
                          line=dict(color='red'),
                          hovertemplate=
-                         '<b>Time</b>: %{x:.2f}s<br>' +
-                         '<b>Vw</b>: %{y:.2f} m/sec<extra></extra>'),
+                         '<b>Time</b>: %{x:.5f}s<br>' +
+                         '<b>vy_des</b>: %{y:.5f} m/sec<extra></extra>'),
               row=3, col=1)
 
+fig.add_trace(go.Scatter(x=time, y=wz,
+                         mode='lines',
+                         name='wz',
+                         line=dict(color='green'),
+                         hovertemplate=
+                         '<b>Time</b>: %{x:.5f}s<br>' +
+                         '<b>wz</b>: %{y:.5f} rad/sec<extra></extra>'),
+              row=4, col=1)
 fig.add_trace(go.Scatter(x=time, y=wz_des,
                          mode='lines',
                          name='wz_des',
                          line=dict(color='red'),
                          hovertemplate=
-                         '<b>Time</b>: %{x:.2f}s<br>' +
-                         '<b>Vw</b>: %{y:.2f} rad/sec<extra></extra>'),
+                         '<b>Time</b>: %{x:.5f}s<br>' +
+                         '<b>Vw</b>: %{y:.5f} rad/sec<extra></extra>'),
               row=4, col=1)
 
 fig.update_layout(title_text='Time-Varying (x, y, Vw_des) Visualization',
