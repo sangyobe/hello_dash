@@ -11,8 +11,9 @@ df = pd.read_csv(csv_filename)
 time = df['time'].to_list()
 x = df['x'].to_list()
 y = df['y'].to_list()
-theta = [(np.pi*0.5-x) for x in df['theta'].to_list()]
+theta = df['theta'].to_list()
 theta_degree = np.degrees(theta)
+theta_degree_disp = np.degrees([(np.pi*0.5-x) for x in theta])
 vx = df['vx'].to_list()
 vy = df['vy'].to_list()
 wz = df['wz'].to_list()
@@ -35,7 +36,7 @@ fig.add_trace(go.Scatter(x=x, y=y,
                              symbol='triangle-up', # 방향을 나타내기 좋은 위쪽 삼각형 마커 사용
                              size=10, # 마커 크기
                              color='blue', # 마커 색상
-                             angle=theta_degree, # theta 값에 따라 마커 회전 (도 단위)
+                             angle=theta_degree_disp, # theta 값에 따라 마커 회전 (도 단위)
                              line=dict(width=1, color='DarkSlateGrey') # 마커 테두리
                          ),
                          line=dict(color='lightgrey', width=1), # 궤적 선 색상 및 두께
