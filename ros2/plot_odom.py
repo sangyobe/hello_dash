@@ -27,6 +27,7 @@ fig = make_subplots(rows=3, cols=2,
                     specs=[[{'rowspan': 3}, {}], [None, {}], [None, {}]],
                     shared_xaxes=True, # x축을 공유하여 시간 동기화
                     vertical_spacing=0.05,
+                    horizontal_spacing=0.03,
                     subplot_titles=("2D Trajectory (x, y) with heading angle(theta)", "Vx over Time", "Vy over Time", "Wz over Time"),
                     column_widths=[0.6, 0.4],
                     row_heights=[0.25,0.25,0.25])
