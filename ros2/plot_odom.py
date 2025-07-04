@@ -23,11 +23,13 @@ wz_des = df['wz_des'].to_list()
 
 
 # Plot
-fig = make_subplots(rows=4, cols=1,
-                    # shared_xaxes=True, # x축을 공유하여 시간 동기화
+fig = make_subplots(rows=3, cols=2,
+                    specs=[[{'rowspan': 3}, {}], [None, {}], [None, {}]],
+                    shared_xaxes=True, # x축을 공유하여 시간 동기화
                     vertical_spacing=0.05,
                     subplot_titles=("2D Trajectory (x, y) with heading angle(theta)", "Vx over Time", "Vy over Time", "Wz over Time"),
-                    row_heights=[0.5,0.25,0.25,0.25])
+                    column_widths=[0.6, 0.4],
+                    row_heights=[0.25,0.25,0.25])
 
 fig.add_trace(go.Scatter(x=x, y=y,
                          mode='lines+markers',
@@ -55,7 +57,7 @@ fig.add_trace(go.Scatter(x=time, y=vx,
                          hovertemplate=
                          '<b>Time</b>: %{x:.5f}s<br>' +
                          '<b>Vx</b>: %{y:.5f} m/sec<extra></extra>'),
-              row=2, col=1)
+              row=1, col=2)
 fig.add_trace(go.Scatter(x=time, y=vx_des,
                          mode='lines',
                          name='vx_des',
@@ -63,7 +65,7 @@ fig.add_trace(go.Scatter(x=time, y=vx_des,
                          hovertemplate=
                          '<b>Time</b>: %{x:.5f}s<br>' +
                          '<b>vx_des</b>: %{y:.5f} m/sec<extra></extra>'),
-              row=2, col=1)
+              row=1, col=2)
 
 fig.add_trace(go.Scatter(x=time, y=vy,
                          mode='lines',
@@ -72,7 +74,7 @@ fig.add_trace(go.Scatter(x=time, y=vy,
                          hovertemplate=
                          '<b>Time</b>: %{x:.5f}s<br>' +
                          '<b>vy</b>: %{y:.5f} m/sec<extra></extra>'),
-              row=3, col=1)
+              row=2, col=2)
 fig.add_trace(go.Scatter(x=time, y=vy_des,
                          mode='lines',
                          name='vy_des',
@@ -80,7 +82,7 @@ fig.add_trace(go.Scatter(x=time, y=vy_des,
                          hovertemplate=
                          '<b>Time</b>: %{x:.5f}s<br>' +
                          '<b>vy_des</b>: %{y:.5f} m/sec<extra></extra>'),
-              row=3, col=1)
+              row=2, col=2)
 
 fig.add_trace(go.Scatter(x=time, y=wz,
                          mode='lines',
@@ -89,7 +91,7 @@ fig.add_trace(go.Scatter(x=time, y=wz,
                          hovertemplate=
                          '<b>Time</b>: %{x:.5f}s<br>' +
                          '<b>wz</b>: %{y:.5f} rad/sec<extra></extra>'),
-              row=4, col=1)
+              row=3, col=2)
 fig.add_trace(go.Scatter(x=time, y=wz_des,
                          mode='lines',
                          name='wz_des',
@@ -97,7 +99,7 @@ fig.add_trace(go.Scatter(x=time, y=wz_des,
                          hovertemplate=
                          '<b>Time</b>: %{x:.5f}s<br>' +
                          '<b>Vw</b>: %{y:.5f} rad/sec<extra></extra>'),
-              row=4, col=1)
+              row=3, col=2)
 
 fig.update_layout(title_text='Time-Varying (x, y, Vw_des) Visualization',
                   hovermode='closest', # 마우스 가까이에 있는 데이터 포인트에 툴팁 표시
@@ -111,6 +113,11 @@ fig.update_yaxes(title_text="Y position", scaleanchor="x", scaleratio=1, row=1, 
 fig.update_yaxes(title_text="Vx (m/sec)", row=2, col=1)
 fig.update_yaxes(title_text="Vy (m/sec)", row=3, col=1)
 fig.update_yaxes(title_text="Wz (rad/sec)", row=4, col=1)
+
+# x축 공유
+fig.update_xaxes(matches='x', row=2, col=1)
+fig.update_xaxes(matches='x', row=3, col=1)
+fig.update_xaxes(matches='x', row=4, col=1)
 
 # 6. 그래프 표시
 fig.show()
