@@ -4,27 +4,40 @@ from plotly.subplots import make_subplots
 import numpy as np
 import pandas as pd
 
+import sys
+import os
+sys.path.append(os.getcwd() + "/lib")
+import file_util as fu
+
 # Initialize the app - incorporate css
 # external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 external_stylesheets = ['stylesheet/bWLwgP.css']
 app = Dash(external_stylesheets=external_stylesheets)
 
+datafiles = fu.list_files_by_extension('data', '.csv')
+datafiles_options = []
+for filepath in datafiles:
+    filename = fu.get_filename_from_filepath(filepath)
+    datafiles_options.append(
+        {'label': filename, 'value':filepath}
+    )
+    
+# print(datafiles)
+# print(datafiles_options)
+
 app.layout = html.Div(children=[
     html.H1(children='LeoQuad-v2 (w/ Perception) Odometry & Cmd_Vel'),
-    
-    html.Div(children='''
-        (powered by Dash)
-    '''),
     
     html.Hr(),
     
     html.Div(children=[
         dcc.Dropdown(
             id='data-list',
-            options=[
-                {'label': 'All active', 'value': 'data/leoquad_odom_demo.csv'},
-                {'label': 'Vy suppressed', 'value': 'data/leoquad_odom_demo_y0.csv'}
-            ],
+            # options=[
+            #     {'label': 'All active', 'value': 'data/leoquad_odom_demo.csv'},
+            #     {'label': 'Vy suppressed', 'value': 'data/leoquad_odom_demo_y0.csv'}
+            # ],
+            options=datafiles_options,
             value='data/leoquad_odom_demo.csv'
     )
     ]),
@@ -140,7 +153,7 @@ def update_graph(csv_filename):
 
     fig.update_layout(title_text=f'datafile: {csv_filename}',
                     hovermode='closest', # 마우스 가까이에 있는 데이터 포인트에 툴팁 표시
-                    height=1000, # 그래프 전체 높이
+                    height=900, # 그래프 전체 높이
                     showlegend=True) # 범례 표시
 
     # x, y 축 라벨 설정
